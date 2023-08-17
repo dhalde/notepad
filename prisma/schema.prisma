@@ -1,0 +1,39 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model userMemoDetails {
+  id       Int       @id @default(autoincrement())
+  title    String    @db.VarChar(255) 
+  url      String  
+  dataTime DateTime     
+  notes    String?
+  userId   Int        // Add a field for the foreign key
+  user     User      @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
+
+model User {
+  id           Int              @id @default(autoincrement())
+  googleId     String           @unique
+  name         String
+  email        String
+  accessToken  String           @db.VarChar(255)
+  refreshToken String?
+  taskListId   String           @db.VarChar(255)
+  memos        userMemoDetails[]
+}
+
+
+
+  // user     User      @relation(fields: [userId], references: [id])
+  // memos      userMemoDetails[]
+
